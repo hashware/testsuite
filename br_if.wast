@@ -14,6 +14,7 @@
     (block (call $dummy) (call $dummy) (br_if 0 (get_local 0)))
   )
   (func (export "as-block-first-value") (param i32) (result i32)
+<<<<<<< HEAD
     (block i32 (drop (br_if 0 (i32.const 10) (get_local 0))) (return (i32.const 11)))
   )
   (func (export "as-block-mid-value") (param i32) (result i32)
@@ -21,6 +22,21 @@
   )
   (func (export "as-block-last-value") (param i32) (result i32)
     (block i32
+=======
+    (block (result i32)
+      (drop (br_if 0 (i32.const 10) (get_local 0))) (return (i32.const 11))
+    )
+  )
+  (func (export "as-block-mid-value") (param i32) (result i32)
+    (block (result i32)
+      (call $dummy)
+      (drop (br_if 0 (i32.const 20) (get_local 0)))
+      (return (i32.const 21))
+    )
+  )
+  (func (export "as-block-last-value") (param i32) (result i32)
+    (block (result i32)
+>>>>>>> upstream/master
       (call $dummy) (call $dummy) (br_if 0 (i32.const 11) (get_local 0))
     )
   )
@@ -37,20 +53,39 @@
   )
 
   (func (export "as-if-then") (param i32 i32)
+<<<<<<< HEAD
     (block (if (get_local 0) (br_if 1 (get_local 1)) (call $dummy)))
   )
   (func (export "as-if-else") (param i32 i32)
     (block (if (get_local 0) (call $dummy) (br_if 1 (get_local 1))))
+=======
+    (block
+      (if (get_local 0) (then (br_if 1 (get_local 1))) (else (call $dummy)))
+    )
+  )
+  (func (export "as-if-else") (param i32 i32)
+    (block
+      (if (get_local 0) (then (call $dummy)) (else (br_if 1 (get_local 1))))
+    )
+>>>>>>> upstream/master
   )
 
   (func (export "nested-block-value") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (i32.add
           (i32.const 4)
           (block i32
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (i32.add
+          (i32.const 4)
+          (block (result i32)
+>>>>>>> upstream/master
             (drop (br_if 1 (i32.const 8) (get_local 0)))
             (i32.const 16)
           )
@@ -62,10 +97,19 @@
   (func (export "nested-br-value") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (br 0
           (block i32 (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4))
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (br 0
+          (block (result i32)
+            (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4)
+          )
+>>>>>>> upstream/master
         )
         (i32.const 16)
       )
@@ -75,10 +119,19 @@
   (func (export "nested-br_if-value") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (drop (br_if 0
           (block i32 (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4))
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (drop (br_if 0
+          (block (result i32)
+            (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4)
+          )
+>>>>>>> upstream/master
           (i32.const 1)
         ))
         (i32.const 16)
@@ -89,11 +142,21 @@
   (func (export "nested-br_if-value-cond") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (drop (br_if 0
           (i32.const 4)
           (block i32 (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 1))
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (drop (br_if 0
+          (i32.const 4)
+          (block (result i32)
+            (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 1)
+          )
+>>>>>>> upstream/master
         ))
         (i32.const 16)
       )
@@ -103,10 +166,19 @@
   (func (export "nested-br_table-value") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (br_table 0
           (block i32 (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4))
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (br_table 0
+          (block (result i32)
+            (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 4)
+          )
+>>>>>>> upstream/master
           (i32.const 1)
         )
         (i32.const 16)
@@ -117,11 +189,21 @@
   (func (export "nested-br_table-value-index") (param i32) (result i32)
     (i32.add
       (i32.const 1)
+<<<<<<< HEAD
       (block i32
         (drop (i32.const 2))
         (br_table 0
           (i32.const 4)
           (block i32 (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 1))
+=======
+      (block (result i32)
+        (drop (i32.const 2))
+        (br_table 0
+          (i32.const 4)
+          (block (result i32)
+            (drop (br_if 1 (i32.const 8) (get_local 0))) (i32.const 1)
+          )
+>>>>>>> upstream/master
         )
         (i32.const 16)
       )
@@ -203,13 +285,21 @@
 
 (assert_invalid
   (module (func $type-false-arg-void-vs-num (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (i32.const 0)) (i32.const 1))
+=======
+    (block (result i32) (br_if 0 (i32.const 0)) (i32.const 1))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-true-arg-void-vs-num (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (i32.const 1)) (i32.const 1))
+=======
+    (block (result i32) (br_if 0 (i32.const 1)) (i32.const 1))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
@@ -226,6 +316,7 @@
   "type mismatch"
 )
 
+<<<<<<< HEAD
 (; TODO(stack): soft failure
 (assert_invalid
   (module (func $type-false-arg-poly-vs-empty
@@ -244,24 +335,45 @@
 (assert_invalid
   (module (func $type-false-arg-void-vs-num (result i32)
     (block i32 (br_if 0 (nop) (i32.const 0)) (i32.const 1))
+=======
+(assert_invalid
+  (module (func $type-false-arg-void-vs-num (result i32)
+    (block (result i32) (br_if 0 (nop) (i32.const 0)) (i32.const 1))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-true-arg-void-vs-num (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (nop) (i32.const 1)) (i32.const 1))
+=======
+    (block (result i32) (br_if 0 (nop) (i32.const 1)) (i32.const 1))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-false-arg-num-vs-num (result i32)
+<<<<<<< HEAD
     (block i32 (drop (br_if 0 (i64.const 1) (i32.const 0))) (i32.const 1))
+=======
+    (block (result i32)
+      (drop (br_if 0 (i64.const 1) (i32.const 0))) (i32.const 1)
+    )
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-true-arg-num-vs-num (result i32)
+<<<<<<< HEAD
     (block i32 (drop (br_if 0 (i64.const 1) (i32.const 0))) (i32.const 1))
+=======
+    (block (result i32)
+      (drop (br_if 0 (i64.const 1) (i32.const 0))) (i32.const 1)
+    )
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
@@ -280,13 +392,27 @@
 )
 (assert_invalid
   (module (func $type-arg-cond-void-vs-i32 (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (i32.const 0) (nop)) (i32.const 1))
+=======
+    (block (result i32) (br_if 0 (i32.const 0) (nop)) (i32.const 1))
+  ))
+  "type mismatch"
+)
+(assert_invalid
+  (module (func $type-arg-void-vs-num-nested (result i32)
+    (block (result i32) (i32.const 0) (block (br_if 1 (i32.const 1))))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-arg-cond-num-vs-i32 (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (i32.const 0) (i64.const 0)) (i32.const 1))
+=======
+    (block (result i32) (br_if 0 (i32.const 0) (i64.const 0)) (i32.const 1))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )

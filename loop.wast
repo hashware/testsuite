@@ -10,11 +10,16 @@
 
   (func (export "singular") (result i32)
     (loop (nop))
+<<<<<<< HEAD
     (loop i32 (i32.const 7))
+=======
+    (loop (result i32) (i32.const 7))
+>>>>>>> upstream/master
   )
 
   (func (export "multi") (result i32)
     (loop (call $dummy) (call $dummy) (call $dummy) (call $dummy))
+<<<<<<< HEAD
     (loop i32 (call $dummy) (call $dummy) (call $dummy) (i32.const 8))
   )
 
@@ -22,10 +27,20 @@
     (loop i32
       (loop (call $dummy) (block) (nop))
       (loop i32 (call $dummy) (i32.const 9))
+=======
+    (loop (result i32) (call $dummy) (call $dummy) (call $dummy) (i32.const 8))
+  )
+
+  (func (export "nested") (result i32)
+    (loop (result i32)
+      (loop (call $dummy) (block) (nop))
+      (loop (result i32) (call $dummy) (i32.const 9))
+>>>>>>> upstream/master
     )
   )
 
   (func (export "deep") (result i32)
+<<<<<<< HEAD
     (loop i32 (block i32 (loop i32 (block i32 (loop i32 (block i32
       (loop i32 (block i32 (loop i32 (block i32 (loop i32 (block i32
         (loop i32 (block i32 (loop i32 (block i32 (loop i32 (block i32
@@ -59,6 +74,67 @@
     (f32.gt
       (loop f32 (call $dummy) (f32.const 3))
       (loop f32 (call $dummy) (f32.const 3))
+=======
+    (loop (result i32) (block (result i32)
+      (loop (result i32) (block (result i32)
+        (loop (result i32) (block (result i32)
+          (loop (result i32) (block (result i32)
+            (loop (result i32) (block (result i32)
+              (loop (result i32) (block (result i32)
+                (loop (result i32) (block (result i32)
+                  (loop (result i32) (block (result i32)
+                    (loop (result i32) (block (result i32)
+                      (loop (result i32) (block (result i32)
+                        (loop (result i32) (block (result i32)
+                          (loop (result i32) (block (result i32)
+                            (loop (result i32) (block (result i32)
+                              (loop (result i32) (block (result i32)
+                                (loop (result i32) (block (result i32)
+                                  (loop (result i32) (block (result i32)
+                                    (loop (result i32) (block (result i32)
+                                      (loop (result i32) (block (result i32)
+                                        (loop (result i32) (block (result i32)
+                                          (loop (result i32) (block (result i32)
+                                            (call $dummy) (i32.const 150)
+                                          ))
+                                        ))
+                                      ))
+                                    ))
+                                  ))
+                                ))
+                              ))
+                            ))
+                          ))
+                        ))
+                      ))
+                    ))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  )
+
+  (func (export "as-unary-operand") (result i32)
+    (i32.ctz (loop (result i32) (call $dummy) (i32.const 13)))
+  )
+  (func (export "as-binary-operand") (result i32)
+    (i32.mul
+      (loop (result i32) (call $dummy) (i32.const 3))
+      (loop (result i32) (call $dummy) (i32.const 4))
+    )
+  )
+  (func (export "as-test-operand") (result i32)
+    (i32.eqz (loop (result i32) (call $dummy) (i32.const 13)))
+  )
+  (func (export "as-compare-operand") (result i32)
+    (f32.gt
+      (loop (result f32) (call $dummy) (f32.const 3))
+      (loop (result f32) (call $dummy) (f32.const 3))
+>>>>>>> upstream/master
     )
   )
 
@@ -70,11 +146,21 @@
     (i32.const 19)
   )
   (func (export "break-value") (result i32)
+<<<<<<< HEAD
     (block i32 (loop i32 (br 1 (i32.const 18)) (br 0) (i32.const 19)))
   )
   (func (export "break-repeated") (result i32)
     (block i32
       (loop i32
+=======
+    (block (result i32)
+      (loop (result i32) (br 1 (i32.const 18)) (br 0) (i32.const 19))
+    )
+  )
+  (func (export "break-repeated") (result i32)
+    (block (result i32)
+      (loop (result i32)
+>>>>>>> upstream/master
         (br 1 (i32.const 18))
         (br 1 (i32.const 19))
         (drop (br_if 1 (i32.const 20) (i32.const 0)))
@@ -89,19 +175,33 @@
   (func (export "break-inner") (result i32)
     (local i32)
     (set_local 0 (i32.const 0))
+<<<<<<< HEAD
     (set_local 0 (i32.add (get_local 0) (block i32 (loop i32 (block i32 (br 2 (i32.const 0x1)))))))
     (set_local 0 (i32.add (get_local 0) (block i32 (loop i32 (loop i32 (br 2 (i32.const 0x2)))))))
     (set_local 0 (i32.add (get_local 0) (block i32 (loop i32 (block i32 (loop i32 (br 1 (i32.const 0x4))))))))
     (set_local 0 (i32.add (get_local 0) (block i32 (loop i32 (i32.ctz (br 1 (i32.const 0x8)))))))
     (set_local 0 (i32.add (get_local 0) (block i32 (loop i32 (i32.ctz (loop i32 (br 2 (i32.const 0x10))))))))
+=======
+    (set_local 0 (i32.add (get_local 0) (block (result i32) (loop (result i32) (block (result i32) (br 2 (i32.const 0x1)))))))
+    (set_local 0 (i32.add (get_local 0) (block (result i32) (loop (result i32) (loop (result i32) (br 2 (i32.const 0x2)))))))
+    (set_local 0 (i32.add (get_local 0) (block (result i32) (loop (result i32) (block (result i32) (loop (result i32) (br 1 (i32.const 0x4))))))))
+    (set_local 0 (i32.add (get_local 0) (block (result i32) (loop (result i32) (i32.ctz (br 1 (i32.const 0x8)))))))
+    (set_local 0 (i32.add (get_local 0) (block (result i32) (loop (result i32) (i32.ctz (loop (result i32) (br 2 (i32.const 0x10))))))))
+>>>>>>> upstream/master
     (get_local 0)
   )
   (func (export "cont-inner") (result i32)
     (local i32)
     (set_local 0 (i32.const 0))
+<<<<<<< HEAD
     (set_local 0 (i32.add (get_local 0) (loop i32 (loop i32 (br 1)))))
     (set_local 0 (i32.add (get_local 0) (loop i32 (i32.ctz (br 0)))))
     (set_local 0 (i32.add (get_local 0) (loop i32 (i32.ctz (loop i32 (br 1))))))
+=======
+    (set_local 0 (i32.add (get_local 0) (loop (result i32) (loop (result i32) (br 1)))))
+    (set_local 0 (i32.add (get_local 0) (loop (result i32) (i32.ctz (br 0)))))
+    (set_local 0 (i32.add (get_local 0) (loop (result i32) (i32.ctz (loop (result i32) (br 1))))))
+>>>>>>> upstream/master
     (get_local 0)
   )
 
@@ -240,26 +340,32 @@
 )
 
 (assert_invalid
-  (module (func $type-value-void-vs-num (result i32)
-    (loop (nop))
+  (module (func $type-value-num-vs-void
+    (loop (i32.const 1))
   ))
   "type mismatch"
 )
 (assert_invalid
-  (module (func $type-value-num-vs-num (result i32)
-    (loop (f32.const 0))
+  (module (func $type-value-empty-vs-num (result i32)
+    (loop (result i32))
   ))
   "type mismatch"
 )
 
 (; TODO(stack): soft failure
 (assert_invalid
+<<<<<<< HEAD
   (module (func $type-value-void-vs-num-after-break (result i32)
     (loop (br 1 (i32.const 1)) (nop))
+=======
+  (module (func $type-value-void-vs-num (result i32)
+    (loop (result i32) (nop))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
+<<<<<<< HEAD
   (module (func $type-value-num-vs-num-after-break (result i32)
     (loop (br 1 (i32.const 1)) (f32.const 0))
   ))
@@ -278,5 +384,26 @@
     (loop (br 0 (i32.const 0)))
   ))
   "type mismatch"
+=======
+  (module (func $type-value-num-vs-num (result i32)
+    (loop (result i32) (f32.const 0))
+  ))
+  "type mismatch"
+)
+(assert_invalid
+  (module (func $type-value-unreached-select (result i32)
+    (loop (result i64) (select (unreachable) (unreachable) (unreachable)))
+  ))
+  "type mismatch"
 )
 
+
+(assert_malformed
+  (module quote "(func loop end $l)")
+  "mismatching label"
+)
+(assert_malformed
+  (module quote "(func loop $a end $l)")
+  "mismatching label"
+>>>>>>> upstream/master
+)

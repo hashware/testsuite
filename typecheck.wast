@@ -30,7 +30,11 @@
 (assert_invalid
   (module (func $type-unary-operand-missing-in-else
     (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if i32 (then (i32.const 0)) (else (i32.eqz))) (drop)
+=======
+    (if (result i32) (then (i32.const 0)) (else (i32.eqz))) (drop)
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
@@ -78,21 +82,33 @@
 (assert_invalid
   (module (func $type-binary-1st-operand-missing-in-if
     (i32.const 0) (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if (i32.add) (drop))
+=======
+    (if (i32.add) (then (drop)))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-binary-2nd-operand-missing-in-if
     (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if (i32.const 0) (i32.add) (drop))
+=======
+    (if (i32.const 0) (then (i32.add)) (else (drop)))
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
 (assert_invalid
   (module (func $type-binary-1st-operand-missing-in-else
     (i32.const 0) (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if i32 (then (i32.const 0)) (else (i32.add) (i32.const 0)))
+=======
+    (if (result i32) (then (i32.const 0)) (else (i32.add) (i32.const 0)))
+>>>>>>> upstream/master
     (drop) (drop)
   ))
   "type mismatch"
@@ -100,7 +116,11 @@
 (assert_invalid
   (module (func $type-binary-2nd-operand-missing-in-else
     (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if i32 (then (i32.const 0)) (else (i32.add)))
+=======
+    (if (result i32) (then (i32.const 0)) (else (i32.add)))
+>>>>>>> upstream/master
     (drop)
   ))
   "type mismatch"
@@ -136,7 +156,11 @@
 (assert_invalid
   (module (func $type-if-operand-missing-in-else
     (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if i32 (then (i32.const 0)) (else (if (then)) (i32.const 0)))
+=======
+    (if (result i32) (then (i32.const 0)) (else (if (then)) (i32.const 0)))
+>>>>>>> upstream/master
     (drop)
   ))
   "type mismatch"
@@ -144,7 +168,11 @@
 
 (assert_invalid
   (module (func $type-br-operand-missing
+<<<<<<< HEAD
     (block i32 (br 0))
+=======
+    (block (result i32) (br 0))
+>>>>>>> upstream/master
     (i32.eqz) (drop)
   ))
   "type mismatch"
@@ -152,6 +180,7 @@
 (assert_invalid
   (module (func $type-br-operand-missing-in-block
     (i32.const 0)
+<<<<<<< HEAD
     (block i32 (br 0))
     (i32.eqz) (drop)
   ))
@@ -161,6 +190,9 @@
   (module (func $type-br-operand-missing-in-loop
     (i32.const 0)
     (loop i32 (br 0))
+=======
+    (block (result i32) (br 0))
+>>>>>>> upstream/master
     (i32.eqz) (drop)
   ))
   "type mismatch"
@@ -169,7 +201,11 @@
   (module (func $type-br-operand-missing-in-if
     (block
       (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
       (if i32 (then (br 0)))
+=======
+      (if (result i32) (then (br 0)))
+>>>>>>> upstream/master
     )
     (i32.eqz) (drop)
   ))
@@ -179,7 +215,11 @@
   (module (func $type-br-operand-missing-in-else
     (block
       (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
       (if i32 (then (i32.const 0)) (else (br 0)))
+=======
+      (if (result i32) (then (i32.const 0)) (else (br 0)))
+>>>>>>> upstream/master
     )
     (i32.eqz) (drop)
   ))
@@ -216,7 +256,11 @@
 (assert_invalid
   (module (func $type-return-operand-missing-in-else (result i32)
     (i32.const 0) (i32.const 0)
+<<<<<<< HEAD
     (if i32 (then (i32.const 0)) (else (return))) (drop)
+=======
+    (if (result i32) (then (i32.const 0)) (else (return))) (drop)
+>>>>>>> upstream/master
   ))
   "type mismatch"
 )
@@ -224,7 +268,7 @@
 ;; TODO(stack): more of the above
 
 ;; if condition
-(assert_invalid (module (func (if (f32.const 0) (nop) (nop)))) "type mismatch")
+(assert_invalid (module (func (if (f32.const 0) (then)))) "type mismatch")
 
 ;; br_if condition
 (assert_invalid (module (func (block (br_if 0 (f32.const 0))))) "type mismatch")
@@ -242,7 +286,7 @@
     (func (type 0))
     (table 0 anyfunc)
     (func
-      (call_indirect 0 (i32.const 0) (f32.const 0))))
+      (call_indirect (type 0) (i32.const 0) (f32.const 0))))
   "type mismatch")
 
 ;; call_indirect index
@@ -251,7 +295,11 @@
     (type (func))
     (func (type 0))
     (table 0 anyfunc)
+<<<<<<< HEAD
     (func (call_indirect 0 (f32.const 0))))
+=======
+    (func (call_indirect (type 0) (f32.const 0))))
+>>>>>>> upstream/master
   "type mismatch")
 
 ;; return
@@ -429,5 +477,5 @@
 (assert_invalid (module (func (f64.promote/f32 (i32.const 0)))) "type mismatch")
 (assert_invalid (module (func (f64.reinterpret/i64 (i32.const 0)))) "type mismatch")
 
-;; grow_memory
-(assert_invalid (module (memory 1) (func (grow_memory (f32.const 0)))) "type mismatch")
+;; memory.grow
+(assert_invalid (module (memory 1) (func (memory.grow (f32.const 0)))) "type mismatch")

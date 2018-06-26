@@ -1,19 +1,37 @@
 (module
   ;; Recursive factorial
   (func (export "fac-rec") (param i64) (result i64)
+<<<<<<< HEAD
     (if i64 (i64.eq (get_local 0) (i64.const 0))
       (i64.const 1)
       (i64.mul (get_local 0) (call 0 (i64.sub (get_local 0) (i64.const 1))))
+=======
+    (if (result i64) (i64.eq (get_local 0) (i64.const 0))
+      (then (i64.const 1))
+      (else
+        (i64.mul (get_local 0) (call 0 (i64.sub (get_local 0) (i64.const 1))))
+      )
+>>>>>>> upstream/master
     )
   )
 
   ;; Recursive factorial named
   (func $fac-rec-named (export "fac-rec-named") (param $n i64) (result i64)
+<<<<<<< HEAD
     (if i64 (i64.eq (get_local $n) (i64.const 0))
       (i64.const 1)
       (i64.mul
         (get_local $n)
         (call $fac-rec-named (i64.sub (get_local $n) (i64.const 1)))
+=======
+    (if (result i64) (i64.eq (get_local $n) (i64.const 0))
+      (then (i64.const 1))
+      (else
+        (i64.mul
+          (get_local $n)
+          (call $fac-rec-named (i64.sub (get_local $n) (i64.const 1)))
+        )
+>>>>>>> upstream/master
       )
     )
   )
@@ -27,8 +45,13 @@
       (loop
         (if
           (i64.eq (get_local 1) (i64.const 0))
+<<<<<<< HEAD
           (br 2)
           (block
+=======
+          (then (br 2))
+          (else
+>>>>>>> upstream/master
             (set_local 2 (i64.mul (get_local 1) (get_local 2)))
             (set_local 1 (i64.sub (get_local 1) (i64.const 1)))
           )
@@ -49,8 +72,13 @@
       (loop $loop
         (if
           (i64.eq (get_local $i) (i64.const 0))
+<<<<<<< HEAD
           (br $done)
           (block
+=======
+          (then (br $done))
+          (else
+>>>>>>> upstream/master
             (set_local $res (i64.mul (get_local $i) (get_local $res)))
             (set_local $i (i64.sub (get_local $i) (i64.const 1)))
           )
@@ -82,4 +110,4 @@
 (assert_return (invoke "fac-rec-named" (i64.const 25)) (i64.const 7034535277573963776))
 (assert_return (invoke "fac-iter-named" (i64.const 25)) (i64.const 7034535277573963776))
 (assert_return (invoke "fac-opt" (i64.const 25)) (i64.const 7034535277573963776))
-(assert_trap (invoke "fac-rec" (i64.const 1073741824)) "call stack exhausted")
+(assert_exhaustion (invoke "fac-rec" (i64.const 1073741824)) "call stack exhausted")

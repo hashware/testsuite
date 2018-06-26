@@ -7,7 +7,11 @@
   (type $T (func (param i32) (result i32)))  ;; 5: i32 -> i32
   (type $U (func (param i32)))               ;; 6: i32 -> void
 
+<<<<<<< HEAD
   (func $print (import "spectest" "print") (type 6))
+=======
+  (func $print (import "spectest" "print_i32") (type 6))
+>>>>>>> upstream/master
 
   (func (type 0))
   (func (type $S))
@@ -23,6 +27,7 @@
 
   (func (export "four") (type $U) (call $print (get_local 0)))
 )
+
 (assert_return (invoke "one") (i32.const 13))
 (assert_return (invoke "two" (i32.const 13)) (i32.const 14))
 (assert_return (invoke "three" (i32.const 13)) (i32.const 11))
@@ -45,7 +50,11 @@
 )
 
 (assert_invalid (module (func (type 42))) "unknown type")
+<<<<<<< HEAD
 (assert_invalid (module (import "spectest" "print" (func (type 43)))) "unknown type")
+=======
+(assert_invalid (module (import "spectest" "print_i32" (func (type 43)))) "unknown type")
+>>>>>>> upstream/master
 
 (module
   (type $T (func (param) (result i32)))
@@ -59,11 +68,19 @@
   (func $u2 (type $U) (i32.const 5))
 
   (func (export "callt") (param $i i32) (result i32)
+<<<<<<< HEAD
     (call_indirect $T (get_local $i))
   )
 
   (func (export "callu") (param $i i32) (result i32)
     (call_indirect $U (get_local $i))
+=======
+    (call_indirect (type $T) (get_local $i))
+  )
+
+  (func (export "callu") (param $i i32) (result i32)
+    (call_indirect (type $U) (get_local $i))
+>>>>>>> upstream/master
   )
 )
 
@@ -97,7 +114,11 @@
   (func $t2 (type $T) (i32.const 2))
 
   (func (export "callt") (param $i i32) (result i32)
+<<<<<<< HEAD
     (call_indirect $T (get_local $i))
+=======
+    (call_indirect (type $T) (get_local $i))
+>>>>>>> upstream/master
   )
 )
 

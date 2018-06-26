@@ -47,7 +47,11 @@
     (local $j i64)
     (set_local $j (i64.const 100))
     (return
+<<<<<<< HEAD
       (block $switch i64
+=======
+      (block $switch (result i64)
+>>>>>>> upstream/master
         (block $7
           (block $default
             (block $4
@@ -87,6 +91,7 @@
   ;; Argument switch
   (func (export "arg") (param $i i32) (result i32)
     (return
+<<<<<<< HEAD
       (block $2 i32
         (i32.add (i32.const 10)
           (block $1 i32
@@ -94,6 +99,15 @@
               (block $0 i32
                 (i32.add (i32.const 1000)
                   (block $default i32
+=======
+      (block $2 (result i32)
+        (i32.add (i32.const 10)
+          (block $1 (result i32)
+            (i32.add (i32.const 100)
+              (block $0 (result i32)
+                (i32.add (i32.const 1000)
+                  (block $default (result i32)
+>>>>>>> upstream/master
                     (br_table $0 $1 $2 $default
                       (i32.mul (i32.const 2) (get_local $i))
                       (i32.and (i32.const 3) (get_local $i))

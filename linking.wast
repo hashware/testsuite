@@ -19,6 +19,23 @@
 (assert_return (invoke $Nf "call") (i32.const 3))
 (assert_return (invoke $Nf "call Mf.call") (i32.const 2))
 
+<<<<<<< HEAD
+=======
+(module
+  (import "spectest" "print_i32" (func $f (param i32)))
+  (export "print" (func $f))
+)
+(register "reexport_f")
+(assert_unlinkable
+  (module (import "reexport_f" "print" (func (param i64))))
+  "incompatible import type"
+)
+(assert_unlinkable
+  (module (import "reexport_f" "print" (func (param i32) (result i32))))
+  "incompatible import type"
+)
+
+>>>>>>> upstream/master
 
 ;; Globals
 
@@ -57,7 +74,11 @@
   (func (export "h") (result i32) (i32.const -4))
 
   (func (export "call") (param i32) (result i32)
+<<<<<<< HEAD
     (call_indirect 0 (get_local 0))
+=======
+    (call_indirect (type 0) (get_local 0))
+>>>>>>> upstream/master
   )
 )
 (register "Mt" $Mt)
@@ -77,7 +98,11 @@
     (call $f (get_local 0))
   )
   (func (export "call") (param i32) (result i32)
+<<<<<<< HEAD
     (call_indirect 1 (get_local 0))
+=======
+    (call_indirect (type 1) (get_local 0))
+>>>>>>> upstream/master
   )
 )
 
@@ -113,7 +138,11 @@
   (func $i (result i32) (i32.const 6))
 
   (func (export "call") (param i32) (result i32)
+<<<<<<< HEAD
     (call_indirect 0 (get_local 0))
+=======
+    (call_indirect (type 0) (get_local 0))
+>>>>>>> upstream/master
   )
 )
 
@@ -142,6 +171,7 @@
 
 (assert_trap (invoke $Ot "call" (i32.const 20)) "undefined")
 
+<<<<<<< HEAD
 (assert_unlinkable
   (module $Qt
     (func $host (import "spectest" "print"))
@@ -151,6 +181,63 @@
     (func $own (result i32) (i32.const 666))
   )
   "invalid use of host function"
+=======
+(module
+  (table (import "Mt" "tab") 0 anyfunc)
+  (elem (i32.const 9) $f)
+  (func $f)
+)
+
+(module $G1 (global (export "g") i32 (i32.const 5)))
+(register "G1" $G1)
+(module $G2
+  (global (import "G1" "g") i32)
+  (global (export "g") i32 (get_global 0))
+)
+(assert_return (get $G2 "g") (i32.const 5))
+
+(assert_unlinkable
+  (module
+    (table (import "Mt" "tab") 0 anyfunc)
+    (elem (i32.const 10) $f)
+    (func $f)
+  )
+  "elements segment does not fit"
+)
+
+(assert_unlinkable
+  (module
+    (table (import "Mt" "tab") 10 anyfunc)
+    (memory (import "Mt" "mem") 1)  ;; does not exist
+    (func $f (result i32) (i32.const 0))
+    (elem (i32.const 7) $f)
+    (elem (i32.const 9) $f)
+  )
+  "unknown import"
+)
+(assert_trap (invoke $Mt "call" (i32.const 7)) "uninitialized")
+
+(assert_unlinkable
+  (module
+    (table (import "Mt" "tab") 10 anyfunc)
+    (func $f (result i32) (i32.const 0))
+    (elem (i32.const 7) $f)
+    (elem (i32.const 12) $f)  ;; out of bounds
+  )
+  "elements segment does not fit"
+)
+(assert_trap (invoke $Mt "call" (i32.const 7)) "uninitialized")
+
+(assert_unlinkable
+  (module
+    (table (import "Mt" "tab") 10 anyfunc)
+    (func $f (result i32) (i32.const 0))
+    (elem (i32.const 7) $f)
+    (memory 1)
+    (data (i32.const 0x10000) "d") ;; out of bounds
+  )
+  "data segment does not fit"
+>>>>>>> upstream/master
 )
 (assert_trap (invoke $Mt "call" (i32.const 7)) "uninitialized")
 
@@ -197,11 +284,31 @@
 (assert_return (invoke $Nm "load" (i32.const 12)) (i32.const 0xf2))
 (assert_return (invoke $Om "load" (i32.const 12)) (i32.const 0xa7))
 
+<<<<<<< HEAD
+=======
+(module
+  (memory (import "Mm" "mem") 0)
+  (data (i32.const 0xffff) "a")
+)
+
+(assert_unlinkable
+  (module
+    (memory (import "Mm" "mem") 0)
+    (data (i32.const 0x10000) "a")
+  )
+  "data segment does not fit"
+)
+
+>>>>>>> upstream/master
 (module $Pm
   (memory (import "Mm" "mem") 1 8)
 
   (func (export "grow") (param $a i32) (result i32)
+<<<<<<< HEAD
     (grow_memory (get_local 0))
+=======
+    (memory.grow (get_local 0))
+>>>>>>> upstream/master
   )
 )
 
@@ -215,6 +322,7 @@
 (assert_return (invoke $Pm "grow" (i32.const 0)) (i32.const 5))
 
 (assert_unlinkable
+<<<<<<< HEAD
   (module $Qm
     (func $host (import "spectest" "print"))
     (memory (import "Mm" "mem") 1)
@@ -224,5 +332,36 @@
     (func $own (result i32) (i32.const 666))
   )
   "invalid use of host function"
+=======
+  (module
+    (func $host (import "spectest" "print"))
+    (memory (import "Mm" "mem") 1)
+    (table (import "Mm" "tab") 0 anyfunc)  ;; does not exist
+    (data (i32.const 0) "abc")
+  )
+  "unknown import"
+)
+(assert_return (invoke $Mm "load" (i32.const 0)) (i32.const 0))
+
+(assert_unlinkable
+  (module
+    (memory (import "Mm" "mem") 1)
+    (data (i32.const 0) "abc")
+    (data (i32.const 0x50000) "d") ;; out of bounds
+  )
+  "data segment does not fit"
+)
+(assert_return (invoke $Mm "load" (i32.const 0)) (i32.const 0))
+
+(assert_unlinkable
+  (module
+    (memory (import "Mm" "mem") 1)
+    (data (i32.const 0) "abc")
+    (table 0 anyfunc)
+    (func)
+    (elem (i32.const 0) 0) ;; out of bounds
+  )
+  "elements segment does not fit"
+>>>>>>> upstream/master
 )
 (assert_return (invoke $Mm "load" (i32.const 0)) (i32.const 0))

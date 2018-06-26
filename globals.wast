@@ -82,7 +82,40 @@
 )
 
 (assert_invalid
+<<<<<<< HEAD
+=======
+  (module (global f32 (f32.neg (f32.const 1))))
+  "constant expression required"
+)
+
+(assert_invalid
+  (module (global i32 (i32.const 0) (nop)))
+  "constant expression required"
+)
+
+(assert_invalid
+  (module (global i32 (nop)))
+  "constant expression required"
+)
+
+(assert_invalid
+>>>>>>> upstream/master
   (module (global i32 (f32.const 0)))
+  "type mismatch"
+)
+
+(assert_invalid
+<<<<<<< HEAD
+  (module (global i32 (get_global 0)))
+  "unknown global"
+)
+=======
+  (module (global i32 (i32.const 0) (i32.const 0)))
+  "type mismatch"
+)
+
+(assert_invalid
+  (module (global i32 (;empty instruction sequence;)))
   "type mismatch"
 )
 
@@ -90,3 +123,67 @@
   (module (global i32 (get_global 0)))
   "unknown global"
 )
+
+(assert_invalid
+  (module (global i32 (get_global 1)) (global i32 (i32.const 0)))
+  "unknown global"
+)
+
+(module
+  (import "spectest" "global_i32" (global i32))
+)
+(assert_malformed
+  (module binary
+    "\00asm" "\01\00\00\00"
+    "\02\94\80\80\80\00"             ;; import section
+      "\01"                          ;; length 1
+      "\08\73\70\65\63\74\65\73\74"  ;; "spectest"
+      "\0a\67\6c\6f\62\61\6c\5f\69\33\32" ;; "global_i32"
+      "\03"                          ;; GlobalImport
+      "\7f"                          ;; i32
+      "\02"                          ;; invalid mutability
+  )
+  "invalid mutability"
+)
+(assert_malformed
+  (module binary
+    "\00asm" "\01\00\00\00"
+    "\02\94\80\80\80\00"             ;; import section
+      "\01"                          ;; length 1
+      "\08\73\70\65\63\74\65\73\74"  ;; "spectest"
+      "\0a\67\6c\6f\62\61\6c\5f\69\33\32" ;; "global_i32"
+      "\03"                          ;; GlobalImport
+      "\7f"                          ;; i32
+      "\ff"                          ;; invalid mutability
+  )
+  "invalid mutability"
+)
+
+(module
+  (global i32 (i32.const 0))
+)
+(assert_malformed
+  (module binary
+    "\00asm" "\01\00\00\00"
+    "\06\86\80\80\80\00"  ;; global section
+      "\01"               ;; length 1
+      "\7f"               ;; i32
+      "\02"               ;; invalid mutability
+      "\41\00"            ;; i32.const 0
+      "\0b"               ;; end
+  )
+  "invalid mutability"
+)
+(assert_malformed
+  (module binary
+    "\00asm" "\01\00\00\00"
+    "\06\86\80\80\80\00"  ;; global section
+      "\01"               ;; length 1
+      "\7f"               ;; i32
+      "\ff"               ;; invalid mutability
+      "\41\00"            ;; i32.const 0
+      "\0b"               ;; end
+  )
+  "invalid mutability"
+)
+>>>>>>> upstream/master

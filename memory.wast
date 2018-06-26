@@ -1,8 +1,10 @@
 ;; Test memory section structure
+
 (module (memory 0 0))
 (module (memory 0 1))
 (module (memory 1 256))
 (module (memory 0 65536))
+<<<<<<< HEAD
 (module (memory 0 0) (data (i32.const 0)))
 (module (memory 0 0) (data (i32.const 0) ""))
 (module (memory 1 1) (data (i32.const 0) "a"))
@@ -16,11 +18,23 @@
 (module (memory (data "")) (func (export "memsize") (result i32) (current_memory)))
 (assert_return (invoke "memsize") (i32.const 0))
 (module (memory (data "x")) (func (export "memsize") (result i32) (current_memory)))
+=======
+
+(assert_invalid (module (memory 0) (memory 0)) "multiple memories")
+(assert_invalid (module (memory (import "spectest" "memory") 0) (memory 0)) "multiple memories")
+
+(module (memory (data)) (func (export "memsize") (result i32) (memory.size)))
+(assert_return (invoke "memsize") (i32.const 0))
+(module (memory (data "")) (func (export "memsize") (result i32) (memory.size)))
+(assert_return (invoke "memsize") (i32.const 0))
+(module (memory (data "x")) (func (export "memsize") (result i32) (memory.size)))
+>>>>>>> upstream/master
 (assert_return (invoke "memsize") (i32.const 1))
 
 (assert_invalid (module (data (i32.const 0))) "unknown memory")
 (assert_invalid (module (data (i32.const 0) "")) "unknown memory")
 (assert_invalid (module (data (i32.const 0) "x")) "unknown memory")
+<<<<<<< HEAD
 
 (assert_invalid
   (module (memory 1) (data (i64.const 0)))
@@ -42,8 +56,37 @@
 (assert_invalid
   (module (memory 0 0) (data (i32.const 0) "a"))
   "data segment does not fit"
+=======
+
+(assert_invalid
+  (module (func (drop (f32.load (i32.const 0)))))
+  "unknown memory"
 )
 (assert_invalid
+  (module (func (f32.store (f32.const 0) (i32.const 0))))
+  "unknown memory"
+)
+(assert_invalid
+  (module (func (drop (i32.load8_s (i32.const 0)))))
+  "unknown memory"
+)
+(assert_invalid
+  (module (func (i32.store8 (i32.const 0) (i32.const 0))))
+  "unknown memory"
+)
+(assert_invalid
+  (module (func (drop (memory.size))))
+  "unknown memory"
+)
+(assert_invalid
+  (module (func (drop (memory.grow (i32.const 0)))))
+  "unknown memory"
+>>>>>>> upstream/master
+)
+
+
+(assert_invalid
+<<<<<<< HEAD
   (module (memory 1 2) (data (i32.const 0) "a") (data (i32.const 98304) "b"))
   "data segment does not fit"
 )
@@ -75,6 +118,24 @@
   "memory size must be at most 65536 pages (4GiB)"
 )
 (assert_invalid
+=======
+  (module (memory 1 0))
+  "size minimum must not be greater than maximum"
+)
+(assert_invalid
+  (module (memory 65537))
+  "memory size must be at most 65536 pages (4GiB)"
+)
+(assert_invalid
+  (module (memory 2147483648))
+  "memory size must be at most 65536 pages (4GiB)"
+)
+(assert_invalid
+  (module (memory 4294967295))
+  "memory size must be at most 65536 pages (4GiB)"
+)
+(assert_invalid
+>>>>>>> upstream/master
   (module (memory 0 65537))
   "memory size must be at most 65536 pages (4GiB)"
 )
@@ -94,6 +155,7 @@
 (module (memory 0) (func (drop (f32.load align=4 (i32.const 0)))))
 
 (assert_invalid
+<<<<<<< HEAD
   (module (memory 0) (func (drop (i64.load align=0 (i32.const 0)))))
   "alignment must be a power of two"
 )
@@ -139,6 +201,32 @@
   "alignment must not be larger than natural"
 )
 (assert_invalid
+=======
+  (module (memory 0) (func (drop (i64.load align=16 (i32.const 0)))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+  (module (memory 0) (func (drop (i64.load align=32 (i32.const 0)))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+  (module (memory 0) (func (drop (i32.load align=8 (i32.const 0)))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+  (module (memory 0) (func (drop (i32.load16_u align=4 (i32.const 0)))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+  (module (memory 0) (func (drop (i32.load8_u align=2 (i32.const 0)))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+  (module (memory 0) (func (i32.store8 align=2 (i32.const 0) (i32.const 0))))
+  "alignment must not be larger than natural"
+)
+(assert_invalid
+>>>>>>> upstream/master
   (module (memory 0) (func (i32.load16_u align=4 (i32.const 0))))
   "alignment must not be larger than natural"
 )
@@ -189,14 +277,22 @@
       (loop
         (if
           (i32.eq (get_local 0) (i32.const 0))
+<<<<<<< HEAD
           (br 2)
+=======
+          (then (br 2))
+>>>>>>> upstream/master
         )
         (set_local 2 (i32.mul (get_local 0) (i32.const 4)))
         (i32.store (get_local 2) (get_local 0))
         (set_local 1 (i32.load (get_local 2)))
         (if
           (i32.ne (get_local 0) (get_local 1))
+<<<<<<< HEAD
           (return (i32.const 0))
+=======
+          (then (return (i32.const 0)))
+>>>>>>> upstream/master
         )
         (set_local 0 (i32.sub (get_local 0) (i32.const 1)))
         (br 0)
@@ -213,14 +309,22 @@
       (loop
         (if
           (i32.eq (get_local 0) (i32.const 0))
+<<<<<<< HEAD
           (br 2)
+=======
+          (then (br 2))
+>>>>>>> upstream/master
         )
         (set_local 2 (f64.convert_s/i32 (get_local 0)))
         (f64.store align=1 (get_local 0) (get_local 2))
         (set_local 1 (f64.load align=1 (get_local 0)))
         (if
           (f64.ne (get_local 2) (get_local 1))
+<<<<<<< HEAD
           (return (i32.const 0))
+=======
+          (then (return (i32.const 0)))
+>>>>>>> upstream/master
         )
         (set_local 0 (i32.sub (get_local 0) (i32.const 1)))
         (br 0)
@@ -237,7 +341,7 @@
         (f64.load (i32.const 8))
         (f64.reinterpret/i64 (i64.const -12345))
       )
-      (return (f64.const 0))
+      (then (return (f64.const 0)))
     )
     (i64.store align=1 (i32.const 9) (i64.const 0))
     (i32.store16 align=1 (i32.const 15) (i32.const 16453))
@@ -302,6 +406,15 @@
 (assert_return (invoke "i32_load16_s" (i32.const 20000)) (i32.const 20000))
 (assert_return (invoke "i32_load16_u" (i32.const 40000)) (i32.const 40000))
 
+(assert_return (invoke "i32_load8_s" (i32.const 0xfedc6543)) (i32.const 0x43))
+(assert_return (invoke "i32_load8_s" (i32.const 0x3456cdef)) (i32.const 0xffffffef))
+(assert_return (invoke "i32_load8_u" (i32.const 0xfedc6543)) (i32.const 0x43))
+(assert_return (invoke "i32_load8_u" (i32.const 0x3456cdef)) (i32.const 0xef))
+(assert_return (invoke "i32_load16_s" (i32.const 0xfedc6543)) (i32.const 0x6543))
+(assert_return (invoke "i32_load16_s" (i32.const 0x3456cdef)) (i32.const 0xffffcdef))
+(assert_return (invoke "i32_load16_u" (i32.const 0xfedc6543)) (i32.const 0x6543))
+(assert_return (invoke "i32_load16_u" (i32.const 0x3456cdef)) (i32.const 0xcdef))
+
 (assert_return (invoke "i64_load8_s" (i64.const -1)) (i64.const -1))
 (assert_return (invoke "i64_load8_u" (i64.const -1)) (i64.const 255))
 (assert_return (invoke "i64_load16_s" (i64.const -1)) (i64.const -1))
@@ -315,3 +428,160 @@
 (assert_return (invoke "i64_load16_u" (i64.const 40000)) (i64.const 40000))
 (assert_return (invoke "i64_load32_s" (i64.const 20000)) (i64.const 20000))
 (assert_return (invoke "i64_load32_u" (i64.const 40000)) (i64.const 40000))
+
+(assert_return (invoke "i64_load8_s" (i64.const 0xfedcba9856346543)) (i64.const 0x43))
+(assert_return (invoke "i64_load8_s" (i64.const 0x3456436598bacdef)) (i64.const 0xffffffffffffffef))
+(assert_return (invoke "i64_load8_u" (i64.const 0xfedcba9856346543)) (i64.const 0x43))
+(assert_return (invoke "i64_load8_u" (i64.const 0x3456436598bacdef)) (i64.const 0xef))
+(assert_return (invoke "i64_load16_s" (i64.const 0xfedcba9856346543)) (i64.const 0x6543))
+(assert_return (invoke "i64_load16_s" (i64.const 0x3456436598bacdef)) (i64.const 0xffffffffffffcdef))
+(assert_return (invoke "i64_load16_u" (i64.const 0xfedcba9856346543)) (i64.const 0x6543))
+(assert_return (invoke "i64_load16_u" (i64.const 0x3456436598bacdef)) (i64.const 0xcdef))
+(assert_return (invoke "i64_load32_s" (i64.const 0xfedcba9856346543)) (i64.const 0x56346543))
+(assert_return (invoke "i64_load32_s" (i64.const 0x3456436598bacdef)) (i64.const 0xffffffff98bacdef))
+(assert_return (invoke "i64_load32_u" (i64.const 0xfedcba9856346543)) (i64.const 0x56346543))
+(assert_return (invoke "i64_load32_u" (i64.const 0x3456436598bacdef)) (i64.const 0x98bacdef))
+
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load32 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load32_u (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load32_s (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load64 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load64_u (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i32) (i32.load64_s (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (i32.store32 (get_local 0) (i32.const 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (i32.store64 (get_local 0) (i64.const 0)))"
+  )
+  "unknown operator"
+)
+
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i64) (i64.load64 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i64) (i64.load64_u (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result i64) (i64.load64_s (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (i64.store64 (get_local 0) (i64.const 0)))"
+  )
+  "unknown operator"
+)
+
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result f32) (f32.load32 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result f32) (f32.load64 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (f32.store32 (get_local 0) (f32.const 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (f32.store64 (get_local 0) (f64.const 0)))"
+  )
+  "unknown operator"
+)
+
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result f64) (f64.load32 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (result f64) (f64.load64 (get_local 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (f64.store32 (get_local 0) (f32.const 0)))"
+  )
+  "unknown operator"
+)
+(assert_malformed
+  (module quote
+    "(memory 1)"
+    "(func (param i32) (f64.store64 (get_local 0) (f64.const 0)))"
+  )
+  "unknown operator"
+)

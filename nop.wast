@@ -43,6 +43,7 @@
   )
 
   (func (export "as-block-first") (result i32)
+<<<<<<< HEAD
     (block i32 (nop) (i32.const 2))
   )
   (func (export "as-block-mid") (result i32)
@@ -66,12 +67,42 @@
   )
   (func (export "as-loop-everywhere") (result i32)
     (loop i32 (nop) (nop) (call $dummy) (nop) (i32.const 4) (nop) (nop))
+=======
+    (block (result i32) (nop) (i32.const 2))
+  )
+  (func (export "as-block-mid") (result i32)
+    (block (result i32) (call $dummy) (nop) (i32.const 2))
+  )
+  (func (export "as-block-last") (result i32)
+    (block (result i32) (nop) (call $dummy) (i32.const 3) (nop))
+  )
+  (func (export "as-block-everywhere") (result i32)
+    (block (result i32)
+      (nop) (nop) (call $dummy) (nop) (i32.const 4) (nop) (nop)
+    )
+  )
+
+  (func (export "as-loop-first") (result i32)
+    (loop (result i32) (nop) (i32.const 2))
+  )
+  (func (export "as-loop-mid") (result i32)
+    (loop (result i32) (call $dummy) (nop) (i32.const 2))
+  )
+  (func (export "as-loop-last") (result i32)
+    (loop (result i32) (call $dummy) (i32.const 3) (nop))
+  )
+  (func (export "as-loop-everywhere") (result i32)
+    (loop (result i32)
+      (nop) (nop) (call $dummy) (nop) (i32.const 4) (nop) (nop)
+    )
+>>>>>>> upstream/master
   )
 
   (func (export "as-if-condition") (param i32)
     (get_local 0) (nop) (if (then (call $dummy)))
   )
   (func (export "as-if-then") (param i32)
+<<<<<<< HEAD
     (if (get_local 0) (nop) (call $dummy))
   )
   (func (export "as-if-else") (param i32)
@@ -93,12 +124,36 @@
   )
   (func (export "as-br_if-everywhere") (param i32) (result i32)
     (block i32
+=======
+    (if (get_local 0) (then (nop)) (else (call $dummy)))
+  )
+  (func (export "as-if-else") (param i32)
+    (if (get_local 0) (then (call $dummy)) (else (nop)))
+  )
+
+  (func (export "as-br-last") (param i32) (result i32)
+    (block (result i32) (get_local 0) (nop) (br 0))
+  )
+  (func (export "as-br-everywhere") (param i32) (result i32)
+    (block (result i32) (nop) (nop) (get_local 0) (nop) (nop) (br 0))
+  )
+
+  (func (export "as-br_if-mid") (param i32) (result i32)
+    (block (result i32) (get_local 0) (nop) (get_local 0) (br_if 0))
+  )
+  (func (export "as-br_if-last") (param i32) (result i32)
+    (block (result i32) (get_local 0) (get_local 0) (nop) (br_if 0))
+  )
+  (func (export "as-br_if-everywhere") (param i32) (result i32)
+    (block (result i32)
+>>>>>>> upstream/master
       (nop) (nop) (get_local 0) (nop) (nop) (get_local 0) (nop) (nop)
       (br_if 0)
     )
   )
 
   (func (export "as-br_table-mid") (param i32) (result i32)
+<<<<<<< HEAD
     (block i32 (get_local 0) (nop) (get_local 0) (br_table 0 0))
   )
   (func (export "as-br_table-last") (param i32) (result i32)
@@ -106,6 +161,15 @@
   )
   (func (export "as-br_table-everywhere") (param i32) (result i32)
     (block i32
+=======
+    (block (result i32) (get_local 0) (nop) (get_local 0) (br_table 0 0))
+  )
+  (func (export "as-br_table-last") (param i32) (result i32)
+    (block (result i32) (get_local 0) (get_local 0) (nop) (br_table 0 0))
+  )
+  (func (export "as-br_table-everywhere") (param i32) (result i32)
+    (block (result i32)
+>>>>>>> upstream/master
       (nop) (nop) (get_local 0) (nop) (nop) (get_local 0) (nop) (nop)
       (br_table 0 0)
     )
@@ -168,11 +232,19 @@
     (nop) (get_local 0) (nop) (nop) (get_local 0) (nop) (nop) (i32.le_s)
   )
 
+<<<<<<< HEAD
   (func (export "as-grow_memory-last") (param i32) (result i32)
     (get_local 0) (nop) (grow_memory)
   )
   (func (export "as-grow_memory-everywhere") (param i32) (result i32)
     (nop) (nop) (get_local 0) (nop) (nop) (grow_memory)
+=======
+  (func (export "as-memory.grow-last") (param i32) (result i32)
+    (get_local 0) (nop) (memory.grow)
+  )
+  (func (export "as-memory.grow-everywhere") (param i32) (result i32)
+    (nop) (nop) (get_local 0) (nop) (nop) (memory.grow)
+>>>>>>> upstream/master
   )
 )
 
@@ -239,8 +311,13 @@
 (assert_return (invoke "as-compare-last" (i32.const 3)) (i32.const 0))
 (assert_return (invoke "as-compare-everywhere" (i32.const 3)) (i32.const 1))
 
+<<<<<<< HEAD
 (assert_return (invoke "as-grow_memory-last" (i32.const 2)) (i32.const 1))
 (assert_return (invoke "as-grow_memory-everywhere" (i32.const 12)) (i32.const 3))
+=======
+(assert_return (invoke "as-memory.grow-last" (i32.const 2)) (i32.const 1))
+(assert_return (invoke "as-memory.grow-everywhere" (i32.const 12)) (i32.const 3))
+>>>>>>> upstream/master
 
 (assert_invalid
   (module (func $type-i32 (result i32) (nop)))

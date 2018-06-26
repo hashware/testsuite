@@ -35,6 +35,7 @@
     (block (nop) (call $dummy) (return))
   )
   (func (export "as-block-value") (result i32)
+<<<<<<< HEAD
     (block i32 (nop) (call $dummy) (return (i32.const 2)))
   )
 
@@ -50,28 +51,64 @@
 
   (func (export "as-br-value") (result i32)
     (block i32 (br 0 (return (i32.const 9))))
+=======
+    (block (result i32) (nop) (call $dummy) (return (i32.const 2)))
+  )
+
+  (func (export "as-loop-first") (result i32)
+    (loop (result i32) (return (i32.const 3)) (i32.const 2))
+  )
+  (func (export "as-loop-mid") (result i32)
+    (loop (result i32) (call $dummy) (return (i32.const 4)) (i32.const 2))
+  )
+  (func (export "as-loop-last") (result i32)
+    (loop (result i32) (nop) (call $dummy) (return (i32.const 5)))
+  )
+
+  (func (export "as-br-value") (result i32)
+    (block (result i32) (br 0 (return (i32.const 9))))
+>>>>>>> upstream/master
   )
 
   (func (export "as-br_if-cond")
     (block (br_if 0 (return)))
   )
   (func (export "as-br_if-value") (result i32)
+<<<<<<< HEAD
     (block i32 (br_if 0 (return (i32.const 8)) (i32.const 1)) (i32.const 7))
   )
   (func (export "as-br_if-value-cond") (result i32)
     (block i32 (drop (br_if 0 (i32.const 6) (return (i32.const 9)))) (i32.const 7))
+=======
+    (block (result i32)
+      (drop (br_if 0 (return (i32.const 8)) (i32.const 1))) (i32.const 7)
+    )
+  )
+  (func (export "as-br_if-value-cond") (result i32)
+    (block (result i32)
+      (drop (br_if 0 (i32.const 6) (return (i32.const 9)))) (i32.const 7)
+    )
+>>>>>>> upstream/master
   )
 
   (func (export "as-br_table-index") (result i64)
     (block (br_table 0 0 0 (return (i64.const 9)))) (i64.const -1)
   )
   (func (export "as-br_table-value") (result i32)
+<<<<<<< HEAD
     (block i32
+=======
+    (block (result i32)
+>>>>>>> upstream/master
       (br_table 0 0 0 (return (i32.const 10)) (i32.const 1)) (i32.const 7)
     )
   )
   (func (export "as-br_table-value-index") (result i32)
+<<<<<<< HEAD
     (block i32
+=======
+    (block (result i32)
+>>>>>>> upstream/master
       (br_table 0 0 (i32.const 6) (return (i32.const 11))) (i32.const 7)
     )
   )
@@ -81,6 +118,7 @@
   )
 
   (func (export "as-if-cond") (result i32)
+<<<<<<< HEAD
     (if (return (i32.const 2)) (i32.const 0) (i32.const 1))
   )
   (func (export "as-if-then") (param i32 i32) (result i32)
@@ -88,6 +126,21 @@
   )
   (func (export "as-if-else") (param i32 i32) (result i32)
     (if i32 (get_local 0) (get_local 1) (return (i32.const 4)))
+=======
+    (if (result i32)
+      (return (i32.const 2)) (then (i32.const 0)) (else (i32.const 1))
+    )
+  )
+  (func (export "as-if-then") (param i32 i32) (result i32)
+    (if (result i32)
+      (get_local 0) (then (return (i32.const 3))) (else (get_local 1))
+    )
+  )
+  (func (export "as-if-else") (param i32 i32) (result i32)
+    (if (result i32)
+      (get_local 0) (then (get_local 1)) (else (return (i32.const 4)))
+    )
+>>>>>>> upstream/master
   )
 
   (func (export "as-select-first") (param i32 i32) (result i32)
@@ -114,6 +167,7 @@
   (type $sig (func (param i32 i32 i32) (result i32)))
   (table anyfunc (elem $f))
   (func (export "as-call_indirect-func") (result i32)
+<<<<<<< HEAD
     (call_indirect $sig (return (i32.const 20)) (i32.const 1) (i32.const 2) (i32.const 3))
   )
   (func (export "as-call_indirect-first") (result i32)
@@ -124,6 +178,26 @@
   )
   (func (export "as-call_indirect-last") (result i32)
     (call_indirect $sig (i32.const 0) (i32.const 1) (i32.const 2) (return (i32.const 23)))
+=======
+    (call_indirect (type $sig)
+      (return (i32.const 20)) (i32.const 1) (i32.const 2) (i32.const 3)
+    )
+  )
+  (func (export "as-call_indirect-first") (result i32)
+    (call_indirect (type $sig)
+      (i32.const 0) (return (i32.const 21)) (i32.const 2) (i32.const 3)
+    )
+  )
+  (func (export "as-call_indirect-mid") (result i32)
+    (call_indirect (type $sig)
+      (i32.const 0) (i32.const 1) (return (i32.const 22)) (i32.const 3)
+    )
+  )
+  (func (export "as-call_indirect-last") (result i32)
+    (call_indirect (type $sig)
+      (i32.const 0) (i32.const 1) (i32.const 2) (return (i32.const 23))
+    )
+>>>>>>> upstream/master
   )
 
   (func (export "as-set_local-value") (result i32) (local f32)
@@ -178,8 +252,13 @@
     (i32.wrap/i64 (return (i32.const 41)))
   )
 
+<<<<<<< HEAD
   (func (export "as-grow_memory-size") (result i32)
     (grow_memory (return (i32.const 40)))
+=======
+  (func (export "as-memory.grow-size") (result i32)
+    (memory.grow (return (i32.const 40)))
+>>>>>>> upstream/master
   )
 )
 
@@ -260,7 +339,7 @@
 
 (assert_return (invoke "as-convert-operand") (i32.const 41))
 
-(assert_return (invoke "as-grow_memory-size") (i32.const 40))
+(assert_return (invoke "as-memory.grow-size") (i32.const 40))
 
 (assert_invalid
   (module (func $type-value-empty-vs-num (result f64) (return)))
